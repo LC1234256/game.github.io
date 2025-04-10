@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,53 +13,62 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            background-color: transparent;
+          
         }
-        
+
         /* 默认样式，适用于所有设备 */
         .game-container {
             display: flex;
             flex-direction: column;
             width: 90%;
-            max-width: 1300px;
+            max-width: 1800px;
             height: auto;
             background-color: white;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             overflow: hidden;
+            cursor: crosshair;
         }
-        
+
         .game-area {
             position: relative;
-            width: 100%;
-            height: 300px;
-            background-color: #f9f9f9;
+            width: 800px;
+            height: 504.5px;
+            background-color: transparent;
             border-bottom: 1px solid #ddd;
             border-right: none;
+            /* 添加这行代码，让鼠标在该区域内变成十字样式 */
+            cursor: crosshair;
+            background-image: url('微信图片_20250410210312.png');
+            background-size: cover;
         }
-        
+
         .circle {
             position: absolute;
-            width: 20px;
-            height: 20px;
-            background-color: #0fd05f;
+            width: 60px;
+            height: 60px;
+            background-size: cover;
+            background-position: center;
+            background-size:200% 200%;
+            background-color: transparent;
             border-radius: 50%;
-            cursor: pointer;
+            cursor: crosshair;
             transform: translate(-50%, -50%);
             transition: background-color 0.2s;
         }
-        
+
         .circle:hover {
             background-color: #45a049;
         }
-        
+
         .control-panel {
             width: 100%;
             padding: 20px;
             display: flex;
             flex-direction: column;
         }
-        
+
         .timer {
             font-size: 36px;
             font-weight: bold;
@@ -66,11 +76,11 @@
             margin-bottom: 20px;
             color: #333;
         }
-        
+
         .input-group {
             margin-bottom: 20px;
         }
-        
+
         input {
             width: 100%;
             padding: 8px;
@@ -79,7 +89,7 @@
             border-radius: 4px;
             box-sizing: border-box;
         }
-        
+
         button {
             padding: 10px 15px;
             background-color: #4CAF50;
@@ -90,45 +100,45 @@
             margin-bottom: 10px;
             font-size: 16px;
         }
-        
+
         button:hover {
             background-color: #45a049;
         }
-        
+
         button:disabled {
             background-color: #cccccc;
             cursor: not-allowed;
         }
-        
+
         #pauseBtn {
             background-color: #ff9800;
         }
-        
+
         #pauseBtn:hover {
             background-color: #e68a00;
         }
-        
+
         #quitBtn {
             background-color: #f44336;
         }
-        
+
         #quitBtn:hover {
             background-color: #d32f2f;
         }
-        
+
         .button-group {
             display: flex;
             gap: 10px;
         }
-        
+
         .button-group button {
             flex: 1;
         }
-        
+
         .stats {
             margin-top: 20px;
         }
-        
+
         .history {
             margin-top: 20px;
             max-height: 200px;
@@ -136,44 +146,52 @@
             border-top: 1px solid #ddd;
             padding-top: 10px;
         }
-        
+
         .history-item {
             padding: 5px 0;
             border-bottom: 1px solid #eee;
         }
-        
+
         /* 媒体查询，适用于中等屏幕设备（如平板电脑） */
         @media (min-width: 768px) {
             .game-container {
                 flex-direction: row;
                 width: 80%;
             }
-        
+
             .game-area {
                 width: 70%;
                 height: 500px;
                 border-right: 1px solid #ddd;
                 border-bottom: none;
             }
-        
+
             .circle {
-                width: 60px;
-                height: 60px;
+                width: 20px;
+                height: 20px;
             }
-        
+
             .control-panel {
                 width: 30%;
             }
         }
-        
+
         /* 媒体查询，适用于大屏幕设备（如桌面电脑） */
         @media (min-width: 1024px) {
             .game-container {
-                width: 1400px;
+                width: 800px;
             }
-        }
+
+           .game-area {
+            width: 800px;
+            height: 504.5px;
+                background-image: url('微信图片_20250410210312.png');
+            }  
+           }
+        
     </style>
 </head>
+
 <body>
     <div class="game-container">
         <div class="game-area" id="gameArea">
@@ -181,9 +199,9 @@
         </div>
         <div class="control-panel">
             <div class="timer" id="timer">00:00</div>
-            
+
             <div class="input-group">
-                <input type="number" id="timeInput" placeholder="输入游戏时间(秒)" min="1" value="30">
+                <input type="number" id="timeInput" placeholder="输入游戏时间(秒)" min="1" value="40">
                 <div class="button-group">
                     <button id="startBtn">开始游戏</button>
                     <button id="quitBtn" disabled>退出游戏</button>
@@ -193,11 +211,11 @@
                     <button id="clearHistoryBtn" disabled>清除历史记录</button>
                 </div>
             </div>
-            
+
             <div class="stats">
                 <p>点击次数: <span id="clickCount">0</span></p>
             </div>
-            
+
             <div class="history">
                 <h3>历史记录</h3>
                 <div id="historyList"></div>
@@ -205,9 +223,18 @@
         </div>
     </div>
 
-    <!-- 添加音频元素 -->
-    <audio id="clickSound" src="cs.aac"></audio>
-
+    <!-- 添加音频元素，支持多种格式 -->
+    <audio id="clickSound">
+        
+        <source src="click.aac" type="audio/aac">
+        您的浏览器不支持音频播放。
+    </audio>
+    <audio id="startSound">
+        <source src="start.aac" type="audio/aac">
+    </audio>
+    <audio id="anyClickSound">
+        <source src="ak.aac" type="audio/aac">
+    </audio>
     <script>
         // 获取DOM元素
         const gameArea = document.getElementById('gameArea');
@@ -219,7 +246,9 @@
         const clearHistoryBtn = document.getElementById('clearHistoryBtn');
         const clickCountDisplay = document.getElementById('clickCount');
         const historyList = document.getElementById('historyList');
-        
+        const clickSound = document.getElementById('clickSound');
+        const startSound = document.getElementById('startSound');
+        const anyClickSound = document.getElementById('anyClickSound');
         // 游戏变量
         let gameActive = false;
         let gamePaused = false;
@@ -228,23 +257,23 @@
         let clickCount = 0;
         let currentCircle = null;
         let gameHistory = [];
-        
+
         // 开始游戏
         function startGame() {
             const gameTime = parseInt(timeInput.value);
-            
+
             if (isNaN(gameTime) || gameTime <= 0) {
                 alert('请输入有效的游戏时间(秒)');
                 return;
             }
-            
+
             // 重置游戏状态
             gameActive = true;
             gamePaused = false;
             timeLeft = gameTime;
             clickCount = 0;
             clickCountDisplay.textContent = '0';
-            
+
             // 更新按钮状态
             startBtn.style.display = 'none';
             pauseBtn.disabled = false;
@@ -252,46 +281,51 @@
             timeInput.disabled = true;
             clearHistoryBtn.disabled = true;
             pauseBtn.textContent = '暂停';
-            
+
             // 开始计时器
             updateTimerDisplay();
             timerInterval = setInterval(updateTimer, 1000);
-            
+            startSound.currentTime = 0; // 重置音频播放位置
+            startSound.play();
+
             // 创建第一个圆形
             createNewCircle();
         }
-        
+
         // 暂停/继续游戏
         function togglePause() {
             gamePaused = !gamePaused;
-            
+
             if (gamePaused) {
                 clearInterval(timerInterval);
                 if (currentCircle) {
                     currentCircle.style.display = 'none';
                 }
                 pauseBtn.textContent = '继续';
+                startSound.pause();
             } else {
                 timerInterval = setInterval(updateTimer, 1000);
                 if (currentCircle) {
                     currentCircle.style.display = 'block';
                 }
                 pauseBtn.textContent = '暂停';
+                startSound.play();
             }
         }
-        
+
         // 退出游戏
         function quitGame() {
             clearInterval(timerInterval);
             gameActive = false;
             gamePaused = false;
-            
+            startSound.pause();
+
             // 移除圆形
             if (currentCircle) {
                 gameArea.removeChild(currentCircle);
                 currentCircle = null;
             }
-            
+
             // 重置按钮状态
             startBtn.style.display = 'block';
             pauseBtn.disabled = true;
@@ -299,52 +333,67 @@
             timeInput.disabled = false;
             clearHistoryBtn.disabled = false;
             pauseBtn.textContent = '暂停';
-            
+
             // 重置计时器显示
             const gameTime = parseInt(timeInput.value);
             timeLeft = gameTime;
             updateTimerDisplay();
         }
-        
+
         // 更新计时器显示
         function updateTimerDisplay() {
             const minutes = Math.floor(timeLeft / 60);
             const seconds = timeLeft % 60;
             timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
-        
+
         // 更新计时器
         function updateTimer() {
             if (!gamePaused) {
                 timeLeft--;
                 updateTimerDisplay();
-                
+
                 if (timeLeft <= 0) {
                     endGame();
                 }
             }
         }
-        
+
         // 创建新圆形
         function createNewCircle() {
             // 移除现有的圆形
             if (currentCircle) {
                 gameArea.removeChild(currentCircle);
             }
-            
+
             // 创建新圆形
             currentCircle = document.createElement('div');
             currentCircle.className = 'circle';
-            
+
             // 随机位置
             const maxX = gameArea.clientWidth - 60;
             const maxY = gameArea.clientHeight - 60;
             const randomX = Math.floor(Math.random() * maxX);
             const randomY = Math.floor(Math.random() * maxY);
-            
+
             currentCircle.style.left = `${randomX}px`;
             currentCircle.style.top = `${randomY}px`;
-            
+
+            // 定义两张图片的路径
+            const imagePaths = [
+                '微信图片_20250410203615.png',
+                '微信图片_20250410203626.png'
+            ];
+
+            // 生成一个随机索引，范围是 0 到 1
+            const randomIndex = Math.floor(Math.random() * imagePaths.length);
+
+            // 根据随机索引选择图片路径
+            const randomImagePath = imagePaths[randomIndex];
+
+            // 设置圆形的背景图片
+            currentCircle.style.backgroundImage = `url('${randomImagePath}')`;
+
             // 点击事件
             currentCircle.addEventListener('click', () => {
                 if (gameActive && !gamePaused) {
@@ -357,21 +406,28 @@
                     createNewCircle();
                 }
             });
-            
+
             gameArea.appendChild(currentCircle);
         }
-        
+
         // 结束游戏
         function endGame() {
             gameActive = false;
             clearInterval(timerInterval);
             
+
+            if (currentCircle) {
+                currentCircle.style.display = 'none';
+          
+            }
+            // 显示结果
+
             // 移除圆形
             if (currentCircle) {
                 gameArea.removeChild(currentCircle);
                 currentCircle = null;
             }
-            
+
             // 更新按钮状态
             startBtn.style.display = 'block';
             pauseBtn.disabled = true;
@@ -379,28 +435,29 @@
             timeInput.disabled = false;
             clearHistoryBtn.disabled = false;
             pauseBtn.textContent = '暂停';
-            
+            startSound.pause();
+
             // 记录游戏结果
             const gameTime = parseInt(timeInput.value);
             const score = clickCount;
             const date = new Date().toLocaleString();
-            
+
             gameHistory.push({ date, gameTime, score });
             updateHistoryDisplay();
         }
-        
+
         // 更新历史记录显示
         function updateHistoryDisplay() {
             historyList.innerHTML = '';
-            
+
             if (gameHistory.length === 0) {
                 historyList.innerHTML = '<p>暂无历史记录</p>';
                 return;
             }
-            
+
             // 按时间倒序排列
             const sortedHistory = [...gameHistory].reverse();
-            
+
             sortedHistory.forEach((record, index) => {
                 const item = document.createElement('div');
                 item.className = 'history-item';
@@ -408,21 +465,27 @@
                 historyList.appendChild(item);
             });
         }
-        
+
         // 清除历史记录
         function clearHistory() {
             gameHistory = [];
             updateHistoryDisplay();
         }
-        
+
         // 事件监听
         startBtn.addEventListener('click', startGame);
         pauseBtn.addEventListener('click', togglePause);
         quitBtn.addEventListener('click', quitGame);
         clearHistoryBtn.addEventListener('click', clearHistory);
-        
+        gameArea.addEventListener('click', () => {
+            if (gameActive && !gamePaused) {
+                anyClickSound.currentTime = 0; // 重置音频播放位置
+                anyClickSound.play();
+            }
+        });
         // 初始化
         updateHistoryDisplay();
     </script>
 </body>
+
 </html>
