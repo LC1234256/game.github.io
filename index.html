@@ -20,7 +20,7 @@
             display: flex;
             flex-direction: column;
             width: 90%;
-            max-width: 800px;
+            max-width: 1300px;
             height: auto;
             background-color: white;
             border-radius: 10px;
@@ -169,7 +169,7 @@
         /* 媒体查询，适用于大屏幕设备（如桌面电脑） */
         @media (min-width: 1024px) {
             .game-container {
-                width: 800px;
+                width: 1400px;
             }
         }
     </style>
@@ -204,6 +204,9 @@
             </div>
         </div>
     </div>
+
+    <!-- 添加音频元素 -->
+    <audio id="clickSound" src="click.aac"></audio>
 
     <script>
         // 获取DOM元素
@@ -347,6 +350,10 @@
                 if (gameActive && !gamePaused) {
                     clickCount++;
                     clickCountDisplay.textContent = clickCount;
+                    // 播放音效
+                    const clickSound = document.getElementById('clickSound');
+                    clickSound.currentTime = 0; // 重置音频播放位置
+                    clickSound.play();
                     createNewCircle();
                 }
             });
